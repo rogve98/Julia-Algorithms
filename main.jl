@@ -11,6 +11,8 @@ bonus 2. factoresde2(): brinda 2 factores de dos dígitos dado un número
 bonus 3. factoresde3(): brinda 2 factores de tres dígitos dado número
 bonus 4. largestpalindrome(): brinda el palíndromo más grande como producto de dos factores de 2 y 3 dígitos (es ineficiente)
 4. largestPalindrome(): palíndromo más grande como producto de dos números de 3 dígitos.
+bonus 5. isprime(): Sirve para determinar si un número dado es primo.
+5. smallestFactors(): determina el número más pequeño formado por factores del 1 al 20. 
 """
 
 #Múltiplos de 3 y 5: Completado
@@ -154,3 +156,37 @@ function largestPalindrome()
     end
     return resultado,factores
 end
+
+#Función para determinar si el número es primo
+
+function isprime(n::Union{Int,Float64})
+    if n < 2 
+        return false 
+    end
+    for i in 2:floor(Int,sqrt(n))
+        if mod(n,i) == 0
+            return false           
+        end
+    end
+    return true
+end
+
+#Función para determinar el 
+
+function smallestFactors(n::Int)
+    resultado = []
+    for factor in 2:n
+        if isprime(factor)
+            push!(resultado,factor)
+        else
+            for primo in resultado
+                if mod(factor,primo) == 0 factor/=primo end
+            end 
+            if isprime(factor) push!(resultado,Int(factor)) end
+        end
+    end
+    return resultado#prod(resultado)
+end
+            
+            
+              
