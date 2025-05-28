@@ -16,7 +16,8 @@ bonus 5. isprime(): Sirve para determinar si un número dado es primo.
 6. sumSquareDifference(): Resta de la suma del 1 al 20 del cuadrado con los cuadrados del 1 al 20.
 bonus 6. primosHastaN(): Determina el conjunto de números primos dada una cota superior N.
 7. primos(): Regresa una lista con los N+1 primeros primos.i
-8. greatestFactor1000(): Dada una lista de 1000 dígitos enteros, se encuentra el producto más grande de un slice de 13 factores.
+8. greatestFactor1000(): Dada una lista de 1000 dígitos enteros, se encuentra el producto más grande de un slice de 13 factores
+9. tripletePitagoras(): Regresa 3 coeficientes que su suma es igual a 100 y son parte de un triplete pitagórico.
 """
 
 #Múltiplos de 3 y 5: Completado
@@ -249,27 +250,6 @@ function primos(N::Int=10_000)
     return primos
 end
 
-num "73167176531330624919225119674426574742355349194934
-96983520312774506326239578318016984801869478851843
-85861560789112949495459501737958331952853208805511
-12540698747158523863050715693290963295227443043557
-66896648950445244523161731856403098711121722383113
-62229893423380308135336276614282806444486645238749
-30358907296290491560440772390713810515859307960866
-70172427121883998797908792274921901699720888093776
-65727333001053367881220235421809751254540594752243
-52584907711670556013604839586446706324415722155397
-53697817977846174064955149290862569321978468622482
-83972241375657056057490261407972968652414535100474
-82166370484403199890008895243450658541227588666881
-16427171479924442928230863465674813919123162824586
-17866458359124566529476545682848912883142607690042
-24219022671055626321111109370544217506941658960408
-07198403850962455444362981230987879927244284909188
-84580156166097919133875499200524063689912560717606
-05886116467109405077541002256983155200055935729725
-71636269561882670428252483600823257530420752963450"
-
 #Función para determinar el producto más grande dados 4 factores en un número de 1000 dígitos.
 
 function greatestFactor1000(num::String,j::Int)
@@ -284,6 +264,96 @@ function greatestFactor1000(num::String,j::Int)
             fs = replace(fs,fs[1] => lista)
         end
     end
-    return greatest,fs           
+    return greatest,fs         
 end
 
+#Función para determinar el triplete pitagórico tal que la suma de sus raíces es igual a 1000
+
+function tripletePitagoras()
+    resultado = []
+    for i in 1:1000
+        for j in i:1000
+            if isinteger(i^2+j^2) && (i+j+sqrt(i^2+j^2))==1000
+                push!(resultado,i,j,Int(sqrt(i^2+j^2)))
+            end
+        end
+    end
+    return prod(resultado)
+end
+
+#Función para determinar la suma de los primeros N números primos
+
+function sumadePrimos(N::Int)
+    return sum(primosHastaN(N))    
+end
+
+#Función para determina el producto más grande de 4 factores de una matriz de 20x20
+
+function largestProduct(num::String)
+    M = reshape(parse.(Int,split(num)),(20,20))
+    largeH = 0
+    largeV = 0
+    largeD = 0
+    largeDi = 0
+    for i in range(1,20)
+        for j in range(1,20)
+            if j <= 17 && prod(M[i,j:j+3]) > largeH
+                largeH = prod(M[i,j:j+3])
+            end
+            if i <= 17 && prod(M[i:i+3,j]) > largeV
+                largeV = prod(M[i:i+3,j])
+            end
+            if j <= 17 && i <= 17 && prod([M[i,j],M[i+1,j+1],M[i+2,j+2],M[i+3,j+3]]) > largeD
+                largeD = prod([M[i,j],M[i+1,j+1],M[i+2,j+2],M[i+3,j+3]])
+            end
+            if i <= 17 && j >= 4 && prod([M[i,j],M[i+1,j-1],M[i+2,j-2],M[i+3,j-3]]) > largeDi
+                largeDi = prod([M[i,j],M[i+1,j-1],M[i+2,j-2],M[i+3,j-3]])
+            end
+        end
+    end
+    return (largeH,largeV,largeD,largeDi)
+end
+
+#Función que determina los factores dado un número
+
+function factores(num::Int)
+    resultado = []
+    for i in range(1,num)
+        if mod(num,i) == 0 push!(resultado,i) end
+    end
+    return resultado    
+end
+
+
+
+#Función para determinar cuantos divisores (Factores) tiene un número
+
+function factoresCota(cota_superior::Int)
+    resultado = []
+    n = 1
+    while (length(resultado) < cota_superior)
+        triangulo = n*(n+1)/2
+        resultado = []
+        for i in range(2,triangulo)
+            if mod(triangulo,i) == 0
+                push!(resultado,i)
+            end
+        end
+        n+=1
+    end
+    return n-1,resultado
+end
+
+function factoresNumsTriangulares(cota::Int)
+    contador  = 0
+    n = 1
+    while contador < cota
+        contador = 0
+        gauss_num = n*(n+1)/2
+        for i in 1:gauss_num
+            if mod(gauss_num,i) == 0 contador+=1  end
+        end
+        n+=1
+    end
+    return contador,n-1
+end
